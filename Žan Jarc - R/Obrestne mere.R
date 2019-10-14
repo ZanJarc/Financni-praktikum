@@ -63,4 +63,13 @@ cas = c(1/4, 1/2, 1, 2, 3, 6, 9, 12)
 plot(cas,maj_2014,type="l",col="red", ylim=c(-1/2, 0.7))
 lines(cas, december_2015,col="green")
 lines(cas, september_2016, col='blue')
+t <- 6
+u <- 12
+terminske <- (((1 + u*data[,8]) /(1+t*data[,6]))-1)/(u-t)
+
+data_terminske <- data[,c(6, 8)]
+colnames(data_terminske) <- c('Euribor 6m', 'Euribor 12m')
+data_terminske$'Napoved 6m'<- terminske
+data_terminske$`Napoved 6m`[1:6] <- NA
+
 
