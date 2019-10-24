@@ -1,0 +1,33 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1571925259052.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "93198D71",
+    "lastKnownWriteTime" : 1869172034664,
+    "last_content_update" : 1571925259052,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "323600B2",
+        "caption" : "data_napovedi",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=data_napovedi&cache_key=323600B2",
+        "displayedObservations" : 36,
+        "environment" : "",
+        "expression" : "data_napovedi",
+        "object" : "data_napovedi",
+        "preview" : 0,
+        "totalObservations" : 36,
+        "variables" : 3
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

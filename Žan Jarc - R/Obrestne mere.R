@@ -48,6 +48,8 @@ row.names(data) <- c('X2.01.2014', 'X3.02.2014', 'X3.03.2014', 'X1.04.2014',
                      'X04.01.2016','X01.02.2016','X01.03.2016','X01.04.2016',
                      'X02.05.2016','X01.06.2016','X01.07.2016','X01.08.2016',
                      'X01.09.2016','X03.10.2016','X01.11.2016','X01.12.2016')
+casi 
+
 t_data_6 <- ts(data[,6], start = 2014, frequency=12)
 t_data_12 <- ts(data[,8], start = 2014, frequency=12)
 
@@ -60,16 +62,35 @@ december_2015 <- data[24,]
 september_2016 <- data[33,]
 
 cas = c(1/4, 1/2, 1, 2, 3, 6, 9, 12)
-plot(cas,maj_2014,type="l",col="red", ylim=c(-1/2, 0.7))
+plot(cas,maj_2014,type="l",col="red", ylim=c(-1/2, 1.5))
 lines(cas, december_2015,col="green")
 lines(cas, september_2016, col='blue')
+legend('topleft', c('maj 2014 ', 'december 2015', 'september 2016'), col=c('red','green', 'blue'), lwd=1)
+
+       
 t <- 6
 u <- 12
 terminske <- (((1 + u*data[,8]) /(1+t*data[,6]))-1)/(u-t)
 
 data_terminske <- data[,c(6, 8)]
 colnames(data_terminske) <- c('Euribor 6m', 'Euribor 12m')
-data_terminske$'Napoved 6m'<- terminske
-data_terminske$`Napoved 6m`[1:6] <- NA
+data_terminske$'Terminske 6x12'<- terminske
 
+data_napovedi <- data [,c(6, 8)]
+colnames(data_napovedi) <- c('Euribor 6m', 'Euribor 12m')
+velikost <-nrow(data)
+napovedi < c(1:36)
+
+for ( i in 1:t){
+  napovedi[i] <- NA
+}
+
+for (i in (t+1):velikost){
+  napovedi[i] = (((1 + u*data[i - t,8]) /(1+t*data[i - t,6]))-1)/(u-t)
+}
+napovedi_2014 <- napovedi [7: 12]
+napovedi_2015 <- napovedi [13: 24]
+napovedi_2016 <- napovedi [25: 36]
+
+data_napovedi$'Napovedi 6m' <-napovedi
 
