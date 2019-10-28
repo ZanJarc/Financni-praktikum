@@ -62,10 +62,9 @@ december_2015 <- data[24,]
 september_2016 <- data[33,]
 
 cas = c(1/4, 1/2, 1, 2, 3, 6, 9, 12)
-plot(cas,maj_2014,type="l",col="red", ylim=c(-1/2, 1.5))
-lines(cas, december_2015,col="green")
-lines(cas, september_2016, col='blue')
-legend('topleft', c('maj 2014 ', 'december 2015', 'september 2016'), col=c('red','green', 'blue'), lwd=1)
+plot(cas,maj_2014,, ylim=c(-1/2, 1.5), type="o", pch = 10, col='red')
+lines(cas, december_2015,type="o",pch = 10, text(10.5,0.2,"1.12.2015"), col='green')
+lines(cas, september_2016, type="o",pch = 10, text(10,-0.2,"1.09.2016"), col='blue')
 
        
 t <- 6
@@ -79,7 +78,7 @@ data_terminske$'Terminske 6x12'<- terminske
 data_napovedi <- data [,c(6, 8)]
 colnames(data_napovedi) <- c('Euribor 6m', 'Euribor 12m')
 velikost <-nrow(data)
-napovedi < c(1:36)
+napovedi <- c(1:36)
 
 for ( i in 1:t){
   napovedi[i] <- NA
@@ -88,9 +87,15 @@ for ( i in 1:t){
 for (i in (t+1):velikost){
   napovedi[i] = (((1 + u*data[i - t,8]) /(1+t*data[i - t,6]))-1)/(u-t)
 }
-napovedi_2014 <- napovedi [7: 12]
-napovedi_2015 <- napovedi [13: 24]
-napovedi_2016 <- napovedi [25: 36]
+napovedi_2014 <- napovedi [(t+1): u]
+napovedi_2015 <- napovedi [(u+1): (2*u)]
+napovedi_2016 <- napovedi [(2*u+1): (3*u)]
 
 data_napovedi$'Napovedi 6m' <-napovedi
+
+
+fit <-lm(napovedi[(t+1):(3*u)]~data$`6m`[7:36])
+plot(data$`6m`[7:36], napovedi[(t+1):(3*u)],pch = 10, cex = 1.0, col = "blue")
+
+
 
