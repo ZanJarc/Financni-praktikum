@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1573055422506.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "559857056",
+    "id" : "5D94606E",
+    "lastKnownWriteTime" : 1573057565,
+    "last_content_update" : 1573057565646,
+    "path" : "//Spin/JarcZ16$/_System/Desktop/FP/Financni-praktikum/2. naloga/Model.R",
+    "project_path" : "Model.R",
+    "properties" : {
+        "cursorPosition" : "77,0",
+        "scrollLine" : "52"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

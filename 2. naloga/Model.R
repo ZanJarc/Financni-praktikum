@@ -12,13 +12,17 @@ shape_weibull=poskus1$estimate[1]
 scale_weibull=poskus1$estimate[2]
 
 #1c)
-histogram_podatki <-hist(podatki$Podatki, main="Histogram odškodnin",breaks=15, xlab="Višina odškodnin", col='lightpink',
+histogram_podatki <-hist(podatki$Podatki, main="Histogram odškodnin",breaks=15, xlab="Višina odškodnin", col='lightblue',
                          probability = TRUE, ylim=c(0,0.7))
 curve(dweibull(x, shape_weibull, scale_weibull), col='red', add=TRUE, lwd=2)
+legend('topright', legend = c('Weibullova porazdelitev'),
+       col = c('red'), lty=1:1)
 
 
 plot(ecdf(podatki$Podatki), xlab='Visina odskodnine', ylab='Porazdelitvena funkcija', main='Porazdelitvena funkcija odskodnin')
-(curve(pweibull(x, shape_weibull, scale_weibull), col='red', add=TRUE, lwd=2))
+curve(pweibull(x, shape_weibull, scale_weibull), col='red', add=TRUE, lwd=2)
+legend('right', legend = c('empiricna porazdelitev', 'Weibullova porazdelitev'),
+       col = c('black', 'red'), lty=1:1)
 
 #1d) N... BIN(n=20, p = 0.5)
 n=20
@@ -41,9 +45,39 @@ d <- 10/h
 diskritirano <- discretize(pweibull(x, shape_weibull, scale_weibull), from = 0, to = (h*d), by = h, method='rounding')
 
 #2b)
-plot(stepfun(seq(0, (d - 1) * h , h), diffinv(diskritirano)), main = "Weibullova porazdelitev", col='blue')
+plot(stepfun(seq(0, (d - 1) * h , h), diffinv(diskritirano)), main = "Weibullova porazdelitev",ylab='Porazdelitvena funkcija', col='blue')
 curve(pweibull(x, shape_weibull, scale_weibull), col='red', add=TRUE, lwd=2)
 
 #2c)
+diskritirano_komul_skode <- discretize(pweibull(x, shape_weibull, scale_weibull), from = 0, to = (h*d), by = h)
 
+panjanrjev_skoda <- aggregateDist(method='recursive', model.freq = 'binom',
+                                  model.sev=diskritirano_komul_skode, size = n, prob = p, 
+                                  x.scale = 0.25, maxit=1000, tol = 0.0025)
+plot(panjanrjev_skoda, pch=10)
 
+#2d)
+
+upanje_skoda <- mean(panjanrjev_skoda)
+disperzija_skoda <- sum(diff(panjanrjev_skoda)*knots(panjanrjev_skoda)**2) - upanje_skoda**2
+
+################### 3. naloga
+
+#3a)
+
+simulacija_stevilo_zahtevkov <- rbinom(10000, n, p) 
+simulacija_sum_skode <- c()
+for (i in simulacija_stevilo_zahtevkov){
+  simulacija_sum_skode <- c(simulacija_sum_skode, sum(rweibull(i, shape_weibull, scale_weibull)))
+}
+
+#3b)
+
+upanje_simulacija_skode <- mean(simulacija_sum_skode)
+disperzija_skode <- var(simulacija_sum_skode)
+
+#3d)
+
+plot(ecdf(simulacija_sum_skode), col='gold', add =TRUE)
+legend('bottomright', legend = c('Panjarjev algoritem', 'Monte Carlo Simulacija'),
+       col = c('black', 'gold'), lty=1:1)
