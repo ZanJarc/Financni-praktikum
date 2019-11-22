@@ -1,0 +1,127 @@
+library(combinat)
+library(Rlab)
+
+# 1. NALOGA
+## 1.a)
+vrsta1 = c(50, 52.50, 49.88, 47.38, 45.01, 47.26)
+vrsta2 = c(50, 52.50, 55.12, 57.88, 60.78, 63.81)
+vrsta3 = c(50, 47.50, 49.88, 47.38, 45.01, 42.76)
+vrsta4 = c(50, 47.50, 45.12, 47.38, 45.01, 47.26)
+vrsta5 = c(50, 52.50, 49.88, 52.37, 54.99, 52.24)
+w = c(1, 2, 3, 4, 5, 6)
+
+X = "call"
+Y = "put"
+izplacilo_1_call <- izplacilo(vrsta1, w, X)
+izplacilo_1_put <- izplacilo(vrsta1, w, Y)
+izplacilo_2_call <- izplacilo(vrsta2, w, X)
+izplacilo_2_put <- izplacilo(vrsta2, w, Y)
+izplacilo_3_call <- izplacilo(vrsta3, w, X)
+izplacilo_3_put <- izplacilo(vrsta3, w, Y)
+izplacilo_4_call <- izplacilo(vrsta4, w, X)
+izplacilo_4_put <- izplacilo(vrsta4, w, Y)
+izplacilo_5_call <- izplacilo(vrsta5, w, X)
+izplacilo_5_put <- izplacilo(vrsta5, w, Y)
+
+#TEST
+izplacilo(c(50,52.5,49.88,52.37,49.75,52.24),c(1,0,1,0,1,0),"call")
+izplacilo(c(50,52.5,55.12,57.88,60.78,63.81),1:6,"put")
+izplacilo(c(60,61.2,59.98,58.78,57.6,58.75,57.58),rep(1,7),"put")
+izplacilo(c(60,58.8,57.62,58.78,59.95,61.15,62.37),7:1,"call")
+izplacilo(c(70,66.5,69.83,73.32,76.98,73.13,69.48),c(0,1,2,1,3,2,3),"put")
+## 1.b)
+
+izplacilo <- function(vrsta, W, type){
+  K = sum(vrsta*W)/sum(W)
+  if(type=="call"){
+    return(max(tail(vrsta,n=1) - K, 0))
+  }
+  else
+  {
+    return(max(K - tail(vrsta,n=1), 0))
+    
+  }
+}
+
+# 2. NALOGA
+## 2.a)
+S0 = 50
+u = 1.05
+d = 0.95
+T = 5
+R = 0.03
+W = c(1,2,3,4,5,6)
+
+binomski <- function(S0, u, d, R, T, W, type){
+  hc = hcube(rep(2,T)) - 1
+  poti = u ** hc * (d ** (1 - hc))
+  drevo <- cbind(rep(S0, 2**T), poti)
+  kom_prod = t(apply(drevo, 1, cumprod))
+  izplacila <- apply(kom_prod, 1, izplacilo, W=W, type=type)
+  q = (1+R-d)/(u-d)
+  stevilo = rowSums(hc)
+  Q = q ** stevilo * (1-q) ** (T-stevilo)
+  povprecje = sum(izplacila*Q)
+  premija = povprecje / (1+R)**T
+  return(premija)
+}
+## TEST
+binomski(50,1.05,0.95,0.03,5,rep(1,6),"put")
+binomski(50, 1.05, 0.9 , 0.03, 10,0:10 , "call")
+binomski(60, 1.05, 0.95, 0.01, 8,c(0,rep(1,8)),"put" )
+binomski(70, 1.05, 1   ,    0,  7, rep(1,8), "call")
+binomski(80, 1.1 , 0.95, 0.05,  9, 12:3, "put" )
+binomski(90, 1.15, 0.8 , 0.01, 11,rep(c(1,0),6), "call")
+
+
+## 2.b)
+
+monte <-function(S0, u, d, R, T, W, type, N){
+  q = (1+R-d)/(u-d)
+  drevo <- matrix(rbinom(N*T, 1, q), N, T)
+  drevo_novo <- d**(1- drevo) * u**(drevo)
+  
+  k <- rowSums(drevo)
+  Q <- q**k *(1-q)**(T-k)
+  
+  drevo_novo <- t(apply(drevo_novo, 1, cumprod))
+  vrednosti <- cbind(S0, S0*drevo_novo) 
+  
+  izplacila <- apply(vrednosti, 1, izplacilo, W=W, type=type)
+  E = sum(izplacila)/ length(izplacila)
+  return (E/(1+R)^T)
+}
+
+#TEST   
+monte(50,1.05,0.9,0.03,10,0:10,"call",100)
+monte(70, 1.05, 1   , 0,7,c(0,rep(1,7)), "put",2000)
+monte(90, 1.15, 0.8 , 0.01, 10,11:1, "call",50000)
+
+S0 = 60
+u = 1.05
+d = 0.95
+R = 0.01
+T = 15
+W = rep(1, 16)
+type = "put"
+N1 = 10
+N2 = 100
+N3 = 1000
+monte1 = monte(S0, u, d, R, T, W, type, N1)
+monte2 = monte(S0, u, d, R, T, W, type, N2)
+monte3 = monte(S0, u, d, R, T, W, type, N3)
+
+# 3. NALOGA
+## 3.a)
+MONTE1 <- c()
+MONTE2 <- c()
+MONTE3 <- c()
+
+for(i in c(1:100)){
+  MONTE1 <- c(MONTE1,monte(60, 1.05, 0.95, 0.01, 15, rep(1,16),"put", 10) )
+  MONTE2 <- c(MONTE2,monte(60, 1.05, 0.95, 0.01,15, rep(1,16), "put", 100) )
+  MONTE3 <- c(MONTE3,monte(60, 1.05, 0.95, 0.01, 15, rep(1,16),"put",1000) )
+} 
+
+
+
