@@ -123,5 +123,82 @@ for(i in c(1:100)){
   MONTE3 <- c(MONTE3,monte(60, 1.05, 0.95, 0.01, 15, rep(1,16),"put",1000) )
 } 
 
+cena <- binomski (60,1.05, 0.95,0.01, 15, rep(1,16), "put")
+
+minimum <-floor(min(MONTE1, MONTE2, MONTE3))
+maksimum <- ceiling((max(MONTE1, MONTE2, MONTE3)))
+########## Historam N=10
+povprecje_MONTE1 <- mean(MONTE1)
+odklon_MONTE1 <- sqrt(var(MONTE1))
+
+Odklon_levo_MONTE1 <- cena - odklon_MONTE1
+odklon_desno_MONTE1 <- cena + odklon_MONTE1
+
+histogram_MONTE1 <- hist(MONTE1, breaks = 7,
+                         main = 'Monte Carlo: N=10',
+                         xlab = 'Premija',
+                         xlim = c(minimum, maksimum),
+                         ylim= c(0,40),
+                         col='lightblue')
+abline(v=povprecje_MONTE1, col='orange')
+abline (v = cena, col = "red", lty = "dashed")
+arrows (x0 = cena, y0=0, x1=odklon_desno_MONTE1, col='orange', length = 0.1)
+arrows(x0 = cena, y0=0, x1=Odklon_levo_MONTE1, col='orange', length = 0.1)
+
+legend('topright', 
+       legend = c('Monte Carlo', 'analiza modela'),
+       col = c('orange', 'red'),
+       cex=0.8,
+       lty=c("solid","dashed"))
+############# Histogram N=100
+povprecje_MONTE2 <- mean(MONTE2)
+odklon_MONTE2 <- sqrt(var(MONTE2))
+
+Odklon_levo_MONTE2 <- cena - odklon_MONTE2
+odklon_desno_MONTE2 <- cena + odklon_MONTE2
+
+histogram_MONTE1 <- hist(MONTE2, breaks = 7,
+                         main = 'Monte Carlo: N=100',
+                         xlab = 'Premija',
+                         xlim = c(minimum, maksimum),
+                         ylim= c(0,40),
+                         col='lightblue')
+abline(v=povprecje_MONTE2, col='orange')
+abline (v = cena, col = "red", lty = "dashed")
+arrows (x0 = cena, y0=0, x1=odklon_desno_MONTE2, col='orange', length = 0.1)
+arrows(x0 = cena, y0=0, x1=Odklon_levo_MONTE2, col='orange', length = 0.1)
+
+legend('topright', 
+       legend = c('Monte Carlo', 'analiza modela'),
+       col = c('orange', 'red'),
+       cex=0.8,
+       lty=c("solid","dashed"))
+
+################ Histogram N=1000
+povprecje_MONTE3 <- mean(MONTE3)
+odklon_MONTE3 <- sqrt(var(MONTE3))
+
+Odklon_levo_MONTE3 <- cena - odklon_MONTE3
+odklon_desno_MONTE3 <- cena + odklon_MONTE3
+
+histogram_MONTE3 <- hist(MONTE3, breaks = 7,
+                         main = 'Monte Carlo: N=1000',
+                         xlab = 'Premija',
+                         xlim = c(minimum, maksimum),
+                         ylim= c(0,40),
+                         col='lightblue')
+abline(v=povprecje_MONTE3, col='orange')
+abline (v = cena, col = "red", lty = "dashed")
+arrows (x0 = cena, y0=0, x1=odklon_desno_MONTE3, col='orange', length = 0.1)
+arrows(x0 = cena, y0=0, x1=Odklon_levo_MONTE3, col='orange', length = 0.1)
+
+legend('topright', 
+       legend = c('Monte Carlo', 'analiza modela'),
+       col = c('orange', 'red'),
+       cex=0.8,
+       lty=c("solid","dashed"))
+
+
+
 
 
